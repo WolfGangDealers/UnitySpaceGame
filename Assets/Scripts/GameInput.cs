@@ -19,7 +19,7 @@ public class GameInput : MonoBehaviour
     }
 
 
-    void ReloadLevel()
+    public static void ReloadLevel()
     {
         int activeSceneIndex =
             SceneManager.GetActiveScene().buildIndex;

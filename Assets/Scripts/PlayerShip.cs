@@ -10,13 +10,25 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] GameObject thrusterRight;
     [SerializeField] GameObject thrusterLeft;
 
+    [Header("Feedback")]
+    [SerializeField] TrailRenderer _trail = null;
+
     Rigidbody _rb = null;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+
+        _trail.enabled = false;
     }
 
+    public float minX = -130;
+    public float maxX = 130;
+    public float minZ = -150;
+    public float maxZ = 150;
+
+    float prevX;
+    float prevZ;
 
     private void FixedUpdate()
     {
@@ -53,6 +65,9 @@ public class PlayerShip : MonoBehaviour
 
     private void Update()
     {
+        prevX = transform.position.x;
+        prevZ = transform.position.z;
+
         // If W is pressed, activate both particle systems
         if (Input.GetKey(KeyCode.W))
         {
@@ -79,6 +94,11 @@ public class PlayerShip : MonoBehaviour
         {
             thrusterLeft.SetActive(false);
         }
+
+        if (Input.GetKeyDown(KeyCode.M)) // If M key is pressed 
+        {
+            Teleport();
+        }
     }
 
     void ToggleThrustersActive() // Toggle both thrusters on.
@@ -98,5 +118,28 @@ public class PlayerShip : MonoBehaviour
         thrusterLeft.SetActive(true);
         thrusterRight.SetActive(false);
     }
-    
+
+    public void SetSpeed(float speedChange)
+    {
+        _moveSpeed += speedChange;
+        // TODO audio/visuals
+    }
+
+    public void SetBoosters(bool activeState)
+    {
+        _trail.enabled = activeState;
+    }
+
+
+    void Teleport()
+    {
+        float newX = Random.Range(minX, maxX);
+        float newZ = Random.Range(minZ, maxZ);
+
+        prevX = newX;
+        prevZ = newZ;
+
+        transform.localPosition = new Vector3(newX, 0, newZ);
+    }
+
 }
